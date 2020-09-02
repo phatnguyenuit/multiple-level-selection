@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import MultipleLevelSelection from 'components/MultipleLevelSelection';
+import { getCategoriesByParentId } from './seeds';
 
 function App() {
   return (
@@ -22,7 +23,15 @@ function App() {
       </header>
       <main className="App-main">
         <div className="flex flex-row flex-align-center flex-justify-center example">
-          <MultipleLevelSelection />
+          <MultipleLevelSelection
+            initialItems={getCategoriesByParentId(0)}
+            getItemKey={(item) => item.categoryId}
+            getItemLabel={(item) => item.name}
+            getNestedItems={(item) => getCategoriesByParentId(item.categoryId)}
+            hasNestedItems={(_, level) => level < 3}
+            isEqual={(item, item2) => item.categoryId === item2.categoryId}
+            placeholder="Choose category"
+          />
         </div>
       </main>
     </div>

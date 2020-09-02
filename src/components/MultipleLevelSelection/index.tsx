@@ -1,20 +1,29 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState, Key } from 'react';
 import clsx from 'clsx';
 
 import useToggle from 'hooks/useToggle';
 
-import { getCategoriesByParentId } from './seeds';
 import './styles.css';
 
-const categoryMap: Record<string, string> = {};
-export const MultipleLevelSelectionComponent: React.FC = () => {
+export function MultipleLevelSelectionComponent<TItem = string>({
+  initialItems,
+  placeholder,
+  classes,
+  getItemKey,
+  getItemLabel,
+  isEqual,
+  getNestedItems,
+  hasNestedItems,
+}: MultipleLevelSelectionProps<TItem>) {
   const [open, toggle] = useToggle();
-  const [value, setValue] = useState<string>();
+  const [selectedItem, setSelectedItem] = useState<TItem>();
 
-  const [renderData, setRenderData] = useState<Record<number, Category[]>>();
-  const [selectedData, setSelectedData] = useState<Record<number, string>>();
+  const [renderData, setRenderData] = useState<Record<number, TItem[]>>({
+    1: initialItems,
+  });
+  const [selectedData, setSelectedData] = useState<Record<number, TItem>>();
 
-  const handleClickItem = (item: string, level: number) => () => {
+  const handleClickItem = (item: TItem, level: number) => () => {
     // Remove level++ data
     setRenderData((prev) =>
       Object.entries(prev || {}).reduce(
@@ -30,74 +39,76 @@ export const MultipleLevelSelectionComponent: React.FC = () => {
     );
 
     // Select item
-    setSelectedData((prev) => ({ ...prev, [level]: `${item}` }));
+    setSelectedData((prev) => ({ ...prev, [level]: item }));
 
     // Fetch level + 1 data
-    fetchLevelItems(item, level + 1);
+    fetchNestedItems(item, level + 1);
   };
 
-  const fetchLevelItems = useCallback(
-    (item: string | number, level: number) => {
-      const fetchedCategories = getCategoriesByParentId(`${item}`);
-
-      // Store to categoryMap
-      fetchedCategories.forEach(
-        ({ categoryId, name }) => (categoryMap[categoryId] = name),
-      );
+  const fetchNestedItems = useCallback(
+    async (item: TItem, level: number) => {
+      const fetchedCategories = await getNestedItems(item, level);
 
       // Update render data
       if (fetchedCategories.length) {
         setRenderData((prev) => ({ ...prev, [level]: fetchedCategories }));
       } else {
-        setValue(`${item}`);
+        // Select item and close dropdown
+        setSelectedItem(item);
+        toggle();
       }
     },
-    [],
+    [getNestedItems, toggle],
   );
 
-  useEffect(() => {
-    if (!renderData) {
-      fetchLevelItems(0, 1);
-    }
-  }, [renderData, fetchLevelItems]);
-
   const label = useMemo(() => {
-    if (!value) return 'Placeholder';
-    return categoryMap[value];
-  }, [value]);
+    if (!selectedItem) return placeholder;
+    return getItemLabel(selectedItem);
+  }, [getItemLabel, placeholder, selectedItem]);
 
   return (
-    <div className="multiple-level-selection-root">
-      <div className={clsx('overlay', { hidden: !open })} onClick={toggle} />
+    <div className={clsx('selection-root', classes?.root)}>
       <div
-        className="select-wrapper multiple-level-selection-header"
+        className={clsx('overlay', classes?.overlay, { hidden: !open })}
+        onClick={toggle}
+      />
+      <div
+        className={clsx(
+          'select-wrapper selection-header',
+          classes?.selectionHeader,
+        )}
         onClick={toggle}
       >
         {label}
       </div>
       {renderData && (
         <div
-          className={clsx('multiple-level-selection-entries', {
+          className={clsx('selection-entries', classes?.selectionEntries, {
             hidden: !open,
           })}
         >
           <div className="flex flex-row">
             {Object.keys(renderData).map((level: string) => (
               <ul
-                key={`multiple-level-entry-level-${level}`}
-                className="multiple-level-entry-level"
+                key={`entry-level-${level}`}
+                className={clsx('entry-level', classes?.levelEntry)}
               >
-                {renderData[+level].map(({ categoryId, name }) => (
+                {renderData[+level].map((item) => (
                   <li
-                    key={categoryId}
-                    className={clsx('multiple-level-entry-level-item', {
-                      'multiple-level-entry-level-item-selected':
-                        selectedData?.[+level] === categoryId,
+                    key={getItemKey(item)}
+                    className={clsx('entry-item', classes?.levelItem, {
+                      'entry-item__nestable': hasNestedItems(item, +level),
+                      'entry-item__selected':
+                        selectedData?.[+level] &&
+                        isEqual(item, selectedData[+level]),
+                      [classes?.levelSelectedItem ?? '']:
+                        selectedData?.[+level] &&
+                        isEqual(item, selectedData[+level]),
                     })}
-                    title={name}
-                    onClick={handleClickItem(categoryId, +level)}
+                    title={getItemLabel(item)}
+                    onClick={handleClickItem(item, +level)}
                   >
-                    {name}
+                    {getItemLabel(item)}
                   </li>
                 ))}
               </ul>
@@ -107,9 +118,32 @@ export const MultipleLevelSelectionComponent: React.FC = () => {
       )}
     </div>
   );
-};
+}
 
-const MultipleLevelSelection = memo(MultipleLevelSelectionComponent);
+const MultipleLevelSelection = memo(
+  MultipleLevelSelectionComponent,
+) as typeof MultipleLevelSelectionComponent & React.ComponentType<any>;
 MultipleLevelSelection.displayName = 'MultipleLevelSelection';
 
 export default MultipleLevelSelection;
+
+const classNames = [
+  'root',
+  'overlay',
+  'selectionHeader',
+  'selectionEntries',
+  'levelEntry',
+  'levelItem',
+  'levelSelectedItem',
+] as const;
+
+interface MultipleLevelSelectionProps<TItem> {
+  initialItems: TItem[];
+  placeholder: string;
+  getItemKey: (item: TItem) => Key;
+  getItemLabel: (item: TItem) => string;
+  getNestedItems: (item: TItem, level: number) => Promise<TItem[]> | TItem[];
+  hasNestedItems: (item: TItem, level: number) => boolean;
+  isEqual: (item: TItem, item2: TItem) => boolean;
+  classes?: Partial<Record<typeof classNames[number], string>>;
+}

@@ -13,12 +13,14 @@ const generateCategories = (
     };
   });
 
-const lv1Categories = generateCategories(0, 10);
+const lv1Categories = generateCategories(0, 20);
+
 const lv2Categories = lv1Categories
-  .map(({ categoryId }) => generateCategories(categoryId, 12))
+  .map(({ categoryId }) => generateCategories(categoryId, 10))
   .flat();
+
 const lv3Categories = lv2Categories
-  .map(({ categoryId }) => generateCategories(categoryId, 3))
+  .map(({ categoryId }) => generateCategories(categoryId, 4))
   .flat();
 
 const categories: Category[] = [
@@ -27,8 +29,8 @@ const categories: Category[] = [
   ...lv3Categories,
 ];
 
-export const getCategoriesByParentId = (parentId: string) =>
-  categories.filter((category) => category.parentId === parentId);
+export const getCategoriesByParentId = (parentId: string | number) =>
+  categories.filter((category) => category.parentId === `${parentId}`);
 
 export const getHierarchyCategories = (categories: Category[]) =>
   categories.map(
