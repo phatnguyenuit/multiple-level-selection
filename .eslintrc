@@ -24,8 +24,7 @@
   ],
   "globals": {
     "document": true,
-    "window": true,
-    "SellerWalletWidget": true
+    "window": true
   },
   "parserOptions": {
     "ecmaVersion": 2018,
@@ -39,6 +38,7 @@
     "no-plusplus": ["warn", {
       "allowForLoopAfterthoughts": true
     }],
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-unused-vars": "error",
@@ -47,9 +47,9 @@
     "import/no-unresolved": "off",
     "import/prefer-default-export": "off",
     "react/jsx-filename-extension": [
-      "off", // TODO: Why using js instead of jsx???
+      "off",
       {
-        "extensions": [".jsx", ".tsx"]
+        "extensions": [".tsx"]
       }
     ],
     "no-console": "error"

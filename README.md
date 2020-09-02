@@ -1,5 +1,6 @@
-# create-react-app-typescript-template
-Create React App TypeScript template
+# multiple-level-selection
+
+Build a multiple level selection in ReactJS with Hooks
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

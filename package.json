@@ -1,6 +1,6 @@
 {
-  "name": "create-react-app-typescript-template",
-  "version": "0.1.0",
+  "name": "@phatnguyenuit/multiple-level-selection",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^7.21.7",
