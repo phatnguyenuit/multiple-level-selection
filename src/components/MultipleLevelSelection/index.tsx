@@ -23,6 +23,27 @@ export function MultipleLevelSelectionComponent<TItem = string>({
   });
   const [selectedData, setSelectedData] = useState<Record<number, TItem>>();
 
+  const fetchNestedItems = useCallback(
+    async (item: TItem, level: number) => {
+      const fetchedCategories = await getNestedItems(item, level);
+
+      // Update render data
+      if (fetchedCategories.length) {
+        setRenderData((prev) => ({ ...prev, [level]: fetchedCategories }));
+      } else {
+        // Select item and close dropdown
+        setSelectedItem(item);
+        toggle();
+      }
+    },
+    [getNestedItems, toggle],
+  );
+
+  const label = useMemo(() => {
+    if (!selectedItem) return placeholder;
+    return getItemLabel(selectedItem);
+  }, [getItemLabel, placeholder, selectedItem]);
+
   const handleClickItem = (item: TItem, level: number) => () => {
     // Remove level++ data
     setRenderData((prev) =>
@@ -44,27 +65,6 @@ export function MultipleLevelSelectionComponent<TItem = string>({
     // Fetch level + 1 data
     fetchNestedItems(item, level + 1);
   };
-
-  const fetchNestedItems = useCallback(
-    async (item: TItem, level: number) => {
-      const fetchedCategories = await getNestedItems(item, level);
-
-      // Update render data
-      if (fetchedCategories.length) {
-        setRenderData((prev) => ({ ...prev, [level]: fetchedCategories }));
-      } else {
-        // Select item and close dropdown
-        setSelectedItem(item);
-        toggle();
-      }
-    },
-    [getNestedItems, toggle],
-  );
-
-  const label = useMemo(() => {
-    if (!selectedItem) return placeholder;
-    return getItemLabel(selectedItem);
-  }, [getItemLabel, placeholder, selectedItem]);
 
   return (
     <div className={clsx('selection-root', classes?.root)}>
