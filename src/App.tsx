@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import CategorySelection from 'components/CategorySelection';
 
 function App() {
   return (
@@ -19,6 +20,11 @@ function App() {
           Learn React
         </a>
       </header>
+      <main className="App-main">
+        <div className="flex flex-row flex-align-center flex-justify-center example">
+          <CategorySelection />
+        </div>
+      </main>
     </div>
   );
 }

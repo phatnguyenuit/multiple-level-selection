@@ -1,0 +1,91 @@
+.category-selection-root {
+  border: 1px solid gray;
+  border-radius: 4px;
+  position: relative;
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.1);
+  height: 100vh;
+  left: 0;
+  margin: 0 auto;
+  overflow-y: hidden;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition: opacity .25s ease;
+  width: 100%;
+  z-index: 2;
+}
+
+.category-selection-header {
+  cursor: pointer;
+  overflow: hidden;
+  padding-right: 28px;
+  padding: 8px 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 150px;
+}
+
+.category-selection-entries {
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 1px solid papayawhip;
+  margin-top: 8px;
+  max-width: 600px;
+  overflow-x: auto;
+  padding: 8px;
+  position: absolute;
+  z-index: 3;
+}
+
+.category-entry-level {
+  list-style-type: none;
+  margin: 0;
+  max-height: 300px;
+  overflow: auto;
+  padding: 0;
+  width: 200px;
+}
+
+.category-entry-level-item {
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 8px 24px 8px 16px;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.category-entry-level-item-selected,
+.category-entry-level-item:hover {
+  background-color: antiquewhite;
+}
+
+.category-entry-level-item::after {
+  content: "〉";
+  position: absolute;
+  right: 8px;
+}
+
+.select-wrapper {
+  position: relative;
+}
+
+.select-wrapper::after {
+  color: #2b2c2e;
+  content: "\2304";
+  font-family: "Roboto";
+  font-size: 1.6em;
+  font-weight: 400;
+  pointer-events: none;
+  position: absolute;
+  right: 8px;
+  top: -8px;
+}
+
+.hidden {
+  display: none;
+}
