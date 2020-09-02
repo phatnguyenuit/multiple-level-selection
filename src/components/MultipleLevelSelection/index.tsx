@@ -7,22 +7,22 @@ import { getCategoriesByParentId } from './seeds';
 import './styles.css';
 
 const categoryMap: Record<string, string> = {};
-export const CategorySelectionComponent: React.FC = () => {
+export const MultipleLevelSelectionComponent: React.FC = () => {
   const [open, toggle] = useToggle();
   const [value, setValue] = useState<string>();
 
   const [renderData, setRenderData] = useState<Record<number, Category[]>>();
   const [selectedData, setSelectedData] = useState<Record<number, string>>();
 
-  const handleClickCategory = (categoryId: string, level: number) => () => {
-    // Update level++ data to []
+  const handleClickItem = (item: string, level: number) => () => {
+    // Remove level++ data
     setRenderData((prev) =>
       Object.entries(prev || {}).reduce(
-        (updatedRenderData, [currentLevel, currentLevelCategories]) => {
+        (updatedRenderData, [currentLevel, currentLevelItems]) => {
           if (+currentLevel > level) return updatedRenderData;
           return {
             ...updatedRenderData,
-            [+currentLevel]: currentLevelCategories,
+            [+currentLevel]: currentLevelItems,
           };
         },
         {},
@@ -30,15 +30,15 @@ export const CategorySelectionComponent: React.FC = () => {
     );
 
     // Select item
-    setSelectedData((prev) => ({ ...prev, [level]: `${categoryId}` }));
+    setSelectedData((prev) => ({ ...prev, [level]: `${item}` }));
 
     // Fetch level + 1 data
-    fetchCategoryByParentId(categoryId, level + 1);
+    fetchLevelItems(item, level + 1);
   };
 
-  const fetchCategoryByParentId = useCallback(
-    (categoryId: string | number, level: number) => {
-      const fetchedCategories = getCategoriesByParentId(`${categoryId}`);
+  const fetchLevelItems = useCallback(
+    (item: string | number, level: number) => {
+      const fetchedCategories = getCategoriesByParentId(`${item}`);
 
       // Store to categoryMap
       fetchedCategories.forEach(
@@ -49,7 +49,7 @@ export const CategorySelectionComponent: React.FC = () => {
       if (fetchedCategories.length) {
         setRenderData((prev) => ({ ...prev, [level]: fetchedCategories }));
       } else {
-        setValue(`${categoryId}`);
+        setValue(`${item}`);
       }
     },
     [],
@@ -57,9 +57,9 @@ export const CategorySelectionComponent: React.FC = () => {
 
   useEffect(() => {
     if (!renderData) {
-      fetchCategoryByParentId(0, 1);
+      fetchLevelItems(0, 1);
     }
-  }, [renderData, fetchCategoryByParentId]);
+  }, [renderData, fetchLevelItems]);
 
   const label = useMemo(() => {
     if (!value) return 'Placeholder';
@@ -67,31 +67,35 @@ export const CategorySelectionComponent: React.FC = () => {
   }, [value]);
 
   return (
-    <div className="category-selection-root">
+    <div className="multiple-level-selection-root">
       <div className={clsx('overlay', { hidden: !open })} onClick={toggle} />
       <div
-        className="select-wrapper category-selection-header"
+        className="select-wrapper multiple-level-selection-header"
         onClick={toggle}
       >
         {label}
       </div>
       {renderData && (
-        <div className={clsx('category-selection-entries', { hidden: !open })}>
+        <div
+          className={clsx('multiple-level-selection-entries', {
+            hidden: !open,
+          })}
+        >
           <div className="flex flex-row">
             {Object.keys(renderData).map((level: string) => (
               <ul
-                key={`category-entry-level-${level}`}
-                className="category-entry-level"
+                key={`multiple-level-entry-level-${level}`}
+                className="multiple-level-entry-level"
               >
                 {renderData[+level].map(({ categoryId, name }) => (
                   <li
                     key={categoryId}
-                    className={clsx('category-entry-level-item', {
-                      'category-entry-level-item-selected':
+                    className={clsx('multiple-level-entry-level-item', {
+                      'multiple-level-entry-level-item-selected':
                         selectedData?.[+level] === categoryId,
                     })}
                     title={name}
-                    onClick={handleClickCategory(categoryId, +level)}
+                    onClick={handleClickItem(categoryId, +level)}
                   >
                     {name}
                   </li>
@@ -105,7 +109,7 @@ export const CategorySelectionComponent: React.FC = () => {
   );
 };
 
-const CategorySelection = memo(CategorySelectionComponent);
-CategorySelection.displayName = 'CategorySelection';
+const MultipleLevelSelection = memo(MultipleLevelSelectionComponent);
+MultipleLevelSelection.displayName = 'MultipleLevelSelection';
 
-export default CategorySelection;
+export default MultipleLevelSelection;

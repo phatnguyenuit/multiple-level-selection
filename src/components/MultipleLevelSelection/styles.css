@@ -1,4 +1,4 @@
-.category-selection-root {
+.multiple-level-selection-root {
   border: 1px solid gray;
   border-radius: 4px;
   position: relative;
@@ -18,7 +18,7 @@
   z-index: 2;
 }
 
-.category-selection-header {
+.multiple-level-selection-header {
   cursor: pointer;
   overflow: hidden;
   padding-right: 28px;
@@ -28,7 +28,7 @@
   width: 150px;
 }
 
-.category-selection-entries {
+.multiple-level-selection-entries {
   background-color: #ffffff;
   border-radius: 4px;
   border: 1px solid papayawhip;
@@ -40,7 +40,7 @@
   z-index: 3;
 }
 
-.category-entry-level {
+.multiple-level-entry-level {
   list-style-type: none;
   margin: 0;
   max-height: 300px;
@@ -49,7 +49,7 @@
   width: 200px;
 }
 
-.category-entry-level-item {
+.multiple-level-entry-level-item {
   border-radius: 4px;
   cursor: pointer;
   overflow: hidden;
@@ -59,12 +59,12 @@
   white-space: nowrap;
 }
 
-.category-entry-level-item-selected,
-.category-entry-level-item:hover {
+.multiple-level-entry-level-item-selected,
+.multiple-level-entry-level-item:hover {
   background-color: antiquewhite;
 }
 
-.category-entry-level-item::after {
+.multiple-level-entry-level-item::after {
   content: "〉";
   position: absolute;
   right: 8px;

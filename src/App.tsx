@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import CategorySelection from 'components/CategorySelection';
+import MultipleLevelSelection from 'components/MultipleLevelSelection';
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
       </header>
       <main className="App-main">
         <div className="flex flex-row flex-align-center flex-justify-center example">
-          <CategorySelection />
+          <MultipleLevelSelection />
         </div>
       </main>
     </div>
