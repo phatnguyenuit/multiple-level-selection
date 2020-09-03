@@ -2,6 +2,10 @@
 
 Build a multiple level selection in ReactJS with Hooks
 
+## Example
+
+![example.PNG](example.PNG)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
