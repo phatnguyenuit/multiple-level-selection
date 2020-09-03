@@ -12,12 +12,21 @@ export function MultipleLevelSelectionComponent<TItem = string>({
   getItemKey,
   getItemLabel,
   isEqual,
+  onChange,
   getNestedItems,
   hasNestedItems,
 }: MultipleLevelSelectionProps<TItem>) {
   const [open, toggle] = useToggle();
   const [selectedItem, setSelectedItem] = useState<TItem>();
 
+  // Render data by level
+  /**
+   * {
+   *    1: item[],
+   *    2: item[],
+   *    ....so on
+   * }
+   */
   const [renderData, setRenderData] = useState<Record<number, TItem[]>>({
     1: initialItems,
   });
@@ -33,10 +42,11 @@ export function MultipleLevelSelectionComponent<TItem = string>({
       } else {
         // Select item and close dropdown
         setSelectedItem(item);
+        onChange?.(item);
         toggle();
       }
     },
-    [getNestedItems, toggle],
+    [getNestedItems, onChange, toggle],
   );
 
   const label = useMemo(() => {
@@ -74,7 +84,8 @@ export function MultipleLevelSelectionComponent<TItem = string>({
       />
       <div
         className={clsx(
-          'select-wrapper selection-header',
+          'select-wrapper',
+          'selection-header',
           classes?.selectionHeader,
         )}
         onClick={toggle}
@@ -146,4 +157,5 @@ interface MultipleLevelSelectionProps<TItem> {
   hasNestedItems: (item: TItem, level: number) => boolean;
   isEqual: (item: TItem, item2: TItem) => boolean;
   classes?: Partial<Record<typeof classNames[number], string>>;
+  onChange?: (item: TItem) => void;
 }

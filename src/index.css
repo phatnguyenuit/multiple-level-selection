@@ -33,3 +33,7 @@ code {
 .flex-justify-center {
   justify-content: center;
 }
+
+.spacing {
+  margin-right: 8px;
+}
