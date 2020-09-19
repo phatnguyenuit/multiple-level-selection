@@ -19,7 +19,7 @@ function App() {
                 getCategoriesByParentId(item.categoryId)
               }
               hasNestedItems={(_, level) => level < 3}
-              isEqual={(item, item2) => item.categoryId === item2.categoryId}
+              isEqual={(item, item2) => item?.categoryId === item2?.categoryId}
               placeholder="Choose category"
               onChange={setCategory}
             />
