@@ -29,7 +29,23 @@
 }
 
 .example {
-  padding: 16px 0;
+  padding: 16px;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col{
+  flex-direction: column;
+}
+
+.flex-align-start {
+  align-items: start;
 }
 
 @keyframes App-logo-spin {

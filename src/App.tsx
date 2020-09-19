@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <main className="App-main">
         <div className="example">
-          <div className="flex flex-col flex-align-center">
+          <div className="flex flex-col flex-align-start">
             <p>Selected category: {category?.name}</p>
             <MultipleLevelSelection
               initialItems={getCategoriesByParentId(0)}

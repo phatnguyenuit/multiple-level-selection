@@ -13,27 +13,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-.flex {
-  display: flex;
-}
-
-.flex-row {
-  flex-direction: row;
-}
-
-.flex-col{
-  flex-direction: column;
-}
-
-.flex-align-center {
-  align-items: center;
-}
-
-.flex-justify-center {
-  justify-content: center;
-}
-
-.spacing {
-  margin-right: 8px;
-}
