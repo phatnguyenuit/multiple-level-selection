@@ -31,22 +31,3 @@ const categories: Category[] = [
 
 export const getCategoriesByParentId = (parentId: string | number) =>
   categories.filter((category) => category.parentId === `${parentId}`);
-
-export const getHierarchyCategories = (
-  categories: Category[],
-): HierarchyCategory[] =>
-  categories.map((category) => ({
-    ...category,
-    children: getCategoriesByParentId(category.parentId),
-  }));
-
-export const getCategoriesMap = (
-  categories: Category[],
-): Record<string, Category[]> =>
-  categories.reduce(
-    (prev, { categoryId }) => ({
-      ...prev,
-      [categoryId]: getCategoriesByParentId(categoryId),
-    }),
-    {},
-  );
