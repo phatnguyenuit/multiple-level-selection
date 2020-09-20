@@ -1,6 +1,6 @@
 import React, { memo, Key } from 'react';
 
-import { useClassNames, useSelect, UseSelectProps, ClassName } from './utils';
+import { useSelect, useClassNames, UseSelectProps, ClassName } from './utils';
 import './styles.css';
 
 export function MultipleLevelSelectionComponent<TItem = string>({
@@ -74,6 +74,6 @@ export default MultipleLevelSelection;
 
 export interface MultipleLevelSelectionProps<TItem>
   extends UseSelectProps<TItem> {
-  getItemKey: (item: TItem) => Key;
-  classes?: Partial<Record<ClassName, string>>;
+  getItemKey: (item: TItem) => Key; // React key generator based on item
+  classes?: Partial<Record<ClassName, string>>; // Custom classe names
 }

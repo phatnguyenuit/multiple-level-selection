@@ -16,7 +16,7 @@ export const useSelect = <TItem = string>({
   const [selectedItem, setSelectedItem] = useState<TItem>();
 
   /**
-   * Render data by level
+   * Rendering items by level
    * {
    *    1: TItem[],
    *    2: TItem[],
@@ -28,6 +28,15 @@ export const useSelect = <TItem = string>({
       1: initialItems,
     },
   );
+
+  /**
+   * Selected item per level
+   * {
+   *   1: TItem,
+   *   2: TItem,
+   *   .... so on
+   * }
+   */
   const [selectedItems, setSelectedItems] = useState<Record<number, TItem>>();
 
   const label = useMemo(() => {
@@ -39,7 +48,7 @@ export const useSelect = <TItem = string>({
     async (item: TItem, level: number) => {
       const nestedItems = await getNestedItems(item, level);
 
-      // Update rendering items
+      // Update rendering items at $level
       if (nestedItems.length) {
         setRenderingItems((prev) => ({ ...prev, [level]: nestedItems }));
       }
@@ -58,7 +67,7 @@ export const useSelect = <TItem = string>({
 
   const handleClickItem = useCallback(
     (item: TItem, level: number) => () => {
-      // Remove level++ items
+      // Remove all items from $level++
       setRenderingItems((prev) =>
         Object.entries(prev || {}).reduce(
           (updatedrenderingItems, [currentLevel, currentLevelItems]) => {
@@ -72,14 +81,14 @@ export const useSelect = <TItem = string>({
         ),
       );
 
-      // Select item
+      // Update selected items
       setSelectedItems((prev) => ({ ...prev, [level]: item }));
 
       if (hasNestedItems(item, level)) {
-        // Fetch level + 1 items
+        // Fetch $level + 1 items
         handleGetNestedItems(item, level + 1);
       } else {
-        // Select item and close dropdown
+        // Select $item and close dropdown
         setSelectedItem(item);
         onChange?.(item);
         toggle();
@@ -92,7 +101,6 @@ export const useSelect = <TItem = string>({
     open,
     label,
     renderingItems,
-    selectedItems,
     toggle,
     handleClickItem,
     isSelectedItem,
@@ -138,11 +146,11 @@ const classNames = [
 
 export type ClassName = typeof classNames[number];
 export interface UseSelectProps<TItem> {
-  initialItems: TItem[];
-  placeholder: string;
+  initialItems: TItem[]; // Initial items (Level 1 items)
+  placeholder: string; // Placeholder show on no item selected
   getItemLabel: (item: TItem) => string;
-  getNestedItems: (item: TItem, level: number) => Promise<TItem[]> | TItem[];
-  hasNestedItems: (item: TItem, level: number) => boolean;
+  getNestedItems: (item: TItem, level: number) => Promise<TItem[]> | TItem[]; // Get the nested level of current item & level
+  hasNestedItems: (item: TItem, level: number) => boolean; // Check if the current item at level still has nested level items
   isEqual: (item?: TItem, item2?: TItem) => boolean;
   onChange?: (item: TItem) => void;
 }

@@ -4,8 +4,6 @@ interface Category {
   name: string;
 }
 
-type CatgoryListData = ListData<Category>;
-
 interface HierarchyCategory extends Category {
   children: Category[];
 }
